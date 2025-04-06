@@ -2,18 +2,20 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import slugify from 'slugify';
 import { Article, Prisma } from '@prisma/client';
-import { Suspense } from 'react';
+import {  Suspense } from 'react';
+import {CreateArticle} from './new';
 // This would typically come from a database or API
 
 export default async function Home() {
-  
-
-
   return (
     <div className="space-y-8">
+      <div className="max-w-4xl mx-auto">
+        <CreateArticle />
+      </div>
+      
       <h2 className="text-3xl font-bold text-gray-900">
         Latest Articles
-        </h2>
+      </h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 text-black">
         <Suspense fallback="">
           <Articles />
@@ -44,5 +46,7 @@ async function Articles() {
     </Link>
   ))
 } 
+
+
 
 export const revalidate = 0
