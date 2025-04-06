@@ -53,7 +53,9 @@ export async function POST(request: Request) {
       let ps = streamObject({
         model,
         schema: articlesSchema,
-        system: "Generate 3 engaging blog article titles related to the given topic but they should be open and not restricted, they can lead to other topics. Include at least 4 unrelated words in the title. Return only the titles, one per line.",
+        system: "Generate 3 engaging blog article titles related to the given topic but they should be open and not restricted, they can lead to other topics."
+        +"Include at least 4 unrelated words in the title." 
+        +"Return only the titles, one per line.",
         prompt: `Generate 3 engaging blog article titles related to "${article.title}".`,
         temperature: 0.7,
         onFinish: async (data) => {

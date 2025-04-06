@@ -12,31 +12,25 @@ import slugify from 'slugify';
 export default function ArticlePage({ article }: { article: Article }) {
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-7xl mx-auto px-4">
       <Link href="/" className="text-blue-600 hover:text-blue-800 mb-8 inline-block">
         ← Back to Articles
       </Link>
 
       <h1 className="text-4xl font-bold text-gray-900 mb-8">{article.title}</h1>
 
-      <ArticleReco article={article} />
-
-
-      <ArticleContent article={article} />
-
-      <div className="bg-gray-50 p-6 rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4">Recommended Articles</h2>
-        {/* {isRecommendationsLoading ? (
-              <div className="animate-pulse space-y-2">
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-              </div>
-            ) : (*/
-
-           /* )} */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="md:col-span-3">
+          <ArticleContent article={article} />
+        </div>
+        
+        <div className="md:col-span-1">
+          <div className="bg-gray-50 p-6 rounded-lg sticky top-4">
+            <h2 className="text-2xl font-semibold mb-4 text-black">Recommended Articles</h2>
+            <ArticleReco article={article} />
+          </div>
+        </div>
       </div>
-
     </div>
   );
 }
