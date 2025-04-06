@@ -20,10 +20,10 @@ export function tokenUsage(model: string) {
             const date = now();
 
             await prisma.$queryRaw(Prisma.sql`
-                insert into Usage (date, model, inputTokens, outputTokens)
+                insert into "Usage" (date, model, "inputTokens", "outputTokens")
                 VALUES (${date}, ${model}, ${input}, ${output})
                 ON CONFLICT (date, model)
-                DO UPDATE SET inputTokens = inputTokens + ${input}, outputTokens = outputTokens + ${output}
+                DO UPDATE SET "inputTokens" = ("Usage"."inputTokens" + ${input}), "outputTokens" = ("Usage"."outputTokens" + ${output})
                 `)
         }
     }
@@ -33,7 +33,7 @@ type ZCost = { input: number; output: number; cost: number }
 
 export async function getTokenUsage(date?: Date) {
     const SQL = Prisma.sql`
-        SELECT model, SUM(inputTokens) AS inputTokens, SUM(outputTokens) AS outputTokens FROM Usage
+        SELECT model, SUM("inputTokens") AS "inputTokens", SUM("outputTokens") AS "outputTokens" FROM "Usage"
         ${date ? Prisma.sql`WHERE date = ${toDate(date)}` : Prisma.empty}
         GROUP BY model
     `

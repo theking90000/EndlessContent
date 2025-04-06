@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     await ThrowIfLimitExceed();
 
     const { prompt } = await request.json();
-    const id = Number(prompt)
+    const id = prompt
     
     const article = await prisma.article.findUnique({
       where:{id}

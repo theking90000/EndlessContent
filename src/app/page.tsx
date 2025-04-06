@@ -24,11 +24,9 @@ export default async function Home() {
 }
 
 async function Articles() {
-  let first = await prisma.article.findMany({
-    where:{id: {lte:10, gte: 1}}
-  })
+  let first :any[]= []
 
-  const random : Article[] = await prisma.$queryRaw(Prisma.sql`SELECT * FROM Article WHERE id > 10 ORDER BY RANDOM() LIMIT 30`);
+  const random : Article[] = await prisma.$queryRaw(Prisma.sql`SELECT * FROM "Article"  ORDER BY RANDOM() LIMIT 30`);
 
   let articles = [...first, ...random]
 
