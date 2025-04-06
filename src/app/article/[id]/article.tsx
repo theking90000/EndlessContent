@@ -13,7 +13,7 @@ export default function ArticlePage({ article }: { article: Article }) {
 
   return (
     <div className="max-w-7xl mx-auto px-4">
-      <Link href="/" className="text-blue-600 hover:text-blue-800 mb-8 inline-block">
+      <Link prefetch={false} href="/" className="text-blue-600 hover:text-blue-800 mb-8 inline-block">
         ← Back to Articles
       </Link>
 
@@ -78,6 +78,7 @@ function ArticleReco({ article}: {article: Article}) {
   {reco.map(({ title, link }, index) => (
     <li key={index}>
       <Link
+        prefetch={false}
         href={`/article/${link}`}
         className="text-blue-600 hover:text-blue-800"
       >

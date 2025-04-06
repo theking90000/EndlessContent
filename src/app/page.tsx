@@ -32,6 +32,7 @@ async function Articles() {
 
   return articles.map((article) => (
     <Link
+      prefetch={false}
       key={article.id}
       href={`/article/${slugify(article.title,{lower:true})}-${article.id}`}
       className="block p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
