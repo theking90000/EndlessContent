@@ -43,7 +43,7 @@ export function CreateArticle() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Create you article"
+              placeholder="Create your article"
               className="w-full px-4 py-3 pr-32 text-lg border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 transition-all duration-300 ease-in-out transform hover:scale-[1.02]"
               required
             />
@@ -62,7 +62,7 @@ export function CreateArticle() {
                   <span>Creating...</span>
                 </div>
               ) : (
-                'Create Article'
+                'Create'
               )}
             </button>
           </div>
