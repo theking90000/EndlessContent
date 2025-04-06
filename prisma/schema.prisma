@@ -24,3 +24,14 @@ model Article {
   relatedTo   Article[] @relation("ArticleRelations")
   relatedFrom Article[] @relation("ArticleRelations")
 }
+
+ // Start of Selection
+model Usage {
+  id          Int      @id @default(autoincrement())
+  date        DateTime // Represents the day of usage
+  model       String   // The model used for generation
+  inputTokens Int      // Count of input tokens
+  outputTokens Int     // Count of output tokens
+
+  @@unique([date, model]) // Unique constraint on date and model
+}

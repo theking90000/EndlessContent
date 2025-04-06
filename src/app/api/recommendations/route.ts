@@ -3,9 +3,11 @@ import { openai } from "@ai-sdk/openai"
 import { prisma } from '@/lib/prisma';
 import { Article } from '@prisma/client';
 import { z } from 'zod';
+import { ThrowIfLimitExceed, tokenUsage } from '../utils';
 
 
 const model = openai.responses("gpt-4o-mini")
+const usage = tokenUsage("gpt-4o-mini");
 
 const articlesSchema = z.object({
   articleTitles: z.array(z.string().describe("blog article titles"))
@@ -24,6 +26,8 @@ function tokenize(text: string): string[] {
 
 export async function POST(request: Request) {
   try {
+    await ThrowIfLimitExceed();
+
     const { prompt } = await request.json();
     const id = Number(prompt)
     
@@ -88,6 +92,8 @@ Example titles:
         prompt: `Generate 3 engaging blog article titles related to "${article.title}".`,
         temperature: 0.7,
         onFinish: async (data) => {
+          await usage.add(data.usage.promptTokens, data.usage.completionTokens);
+
           const names = data.object?.articleTitles as string[]
           let b =[]
           try {

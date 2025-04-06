@@ -1,11 +1,15 @@
 import { createDataStreamResponse, pipeDataStreamToResponse, simulateReadableStream, streamText } from 'ai';
 import { openai } from "@ai-sdk/openai"
 import { prisma } from '@/lib/prisma';
+import { getTokenUsage, ThrowIfLimitExceed, tokenUsage } from '../utils';
 
 const model = openai.responses("gpt-4o-mini")
+const usage = tokenUsage("gpt-4o-mini");
 
 export async function POST(request: Request) {
   try {
+    await ThrowIfLimitExceed();
+
     const { prompt } = await request.json();
     const id = Number(prompt)
     
@@ -32,6 +36,8 @@ Use a friendly yet professional tone. Avoid unnecessary jargon and explain conce
 The content should be valuable and accessible to a general audience.`,
         temperature: 0.7,
         onFinish: async (data) => {
+          await usage.add(data.usage.promptTokens, data.usage.completionTokens);
+
           await prisma.article.update({
             where: {id},
             data: {content: data.text}

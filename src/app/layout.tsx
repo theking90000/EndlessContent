@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { GetCumulatedCost, getTokenUsage } from "./api/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,9 @@ export default function RootLayout({
                 <div className="flex items-center">
                   <h1 className="text-xl font-bold text-gray-900">Endless Content</h1>
                 </div>
+                <div className="flex items-center">
+                  <Usage />
+                </div>
               </div>
             </div>
           </nav>
@@ -35,3 +39,13 @@ export default function RootLayout({
     </html>
   );
 }
+
+async function Usage() {
+  const usage = await getTokenUsage(new Date());
+
+  const cost = GetCumulatedCost(usage);
+
+  return <span className="text-gray-900">
+    Tokens: {cost.input}/{cost.output} {cost.cost}$
+  </span>
+} 
