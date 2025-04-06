@@ -1,12 +1,17 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import slugify from 'slugify';
+import { Article, Prisma } from '@prisma/client';
 // This would typically come from a database or API
 
 export default async function Home() {
-  const articles = await prisma.article.findMany({
+  let first = await prisma.article.findMany({
     where:{id: {lte:10, gte: 1}}
   })
+
+  const random : Article[] = await prisma.$queryRaw(Prisma.sql`SELECT * FROM Article WHERE id > 10 ORDER BY RANDOM() LIMIT 30`);
+
+  let articles = [...first, ...random]
 
   return (
     <div className="space-y-8">

@@ -23,8 +23,13 @@ export async function POST(request: Request) {
     if(!article.content) {
       const result = streamText({
         model,
-        system: "You are a professional blog writer. Write engaging, informative articles with a clear structure.",
-        prompt: `Write a blog article about "${article.title}". The article should be well-structured, engaging, and informative. Include an introduction, main points, and a conclusion.`,
+        system: "You are a professional blog writer. Write engaging, informative articles with a clear structure and natural flow.",
+        prompt: `Write a blog article based on the title: "${article.title}". 
+Do not include the title in the response. 
+The article should be well-structured, engaging, and informative. 
+Start with an introduction that hooks the reader, followed by 2-4 main sections with clear subheadings, and end with a thoughtful conclusion. 
+Use a friendly yet professional tone. Avoid unnecessary jargon and explain concepts clearly. 
+The content should be valuable and accessible to a general audience.`,
         temperature: 0.7,
         onFinish: async (data) => {
           await prisma.article.update({
