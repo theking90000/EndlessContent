@@ -1,9 +1,26 @@
-import { createDataStreamResponse, simulateReadableStream, streamText } from 'ai';
+import { createDataStreamResponse, simulateReadableStream, streamObject, streamText } from 'ai';
 import { openai } from "@ai-sdk/openai"
 import { prisma } from '@/lib/prisma';
 import { Article } from '@prisma/client';
+import { z } from 'zod';
+
 
 const model = openai.responses("gpt-4o-mini")
+
+const articlesSchema = z.object({
+  articleTitles: z.array(z.string().describe("blog article titles"))
+})
+
+function getTokenDiff(prev: string[], curr: string[]): string[] {
+  const prevJoined = prev.join('\n');
+  const currJoined = curr.join('\n');
+  return [currJoined.slice(prevJoined.length)];
+}
+
+function tokenize(text: string): string[] {
+  // Split by word and keep line breaks or space tokens
+  return text.split(/(\s+|(?=\n))/).filter(token => token !== '');
+}
 
 export async function POST(request: Request) {
   try {
@@ -33,14 +50,14 @@ export async function POST(request: Request) {
 
     let s : any;
     if(article.relatedTo.length === 0) {
-      let ps = streamText({
+      let ps = streamObject({
         model,
-        system: "Generate 3 engaging blog article titles related to the given topic. Return only the titles, one per line.",
+        schema: articlesSchema,
+        system: "Generate 3 engaging blog article titles related to the given topic but they should be open and not restricted, they can lead to other topics. Include at least 4 unrelated words in the title. Return only the titles, one per line.",
         prompt: `Generate 3 engaging blog article titles related to "${article.title}".`,
         temperature: 0.7,
         onFinish: async (data) => {
-          const names = data.text.split('\n').map(n => n.replace(/^[0-9]\./, "").replaceAll('"', '').trim())
-          console.log('names=',names)
+          const names = data.object?.articleTitles as string[]
           let b =[]
           try {
             
@@ -58,13 +75,45 @@ export async function POST(request: Request) {
           onRelatedCreated(b);
         }
       });
-      s= ps.textStream;
+      
+      let oldObj = { articleTitles: [ ]}
+      let xs = new TransformStream({
+        transform(chunk, controller) {
+          const diff = getTokenDiff(oldObj.articleTitles, chunk.articleTitles||[]);
+
+          oldObj.articleTitles = chunk.articleTitles||[]
+          for (const d of diff) {
+            if(d==="") continue
+            controller.enqueue(d);
+          }
+          // // Format the chunk as a token with the required prefix
+          // controller.enqueue(`0:${JSON.stringify(chunk + " ")}\n`);
+        },
+        flush(controller) {
+
+        }
+      });
+      s=xs.readable
+
+      ps.partialObjectStream.pipeTo(xs.writable);
       
 
      // return result.toDataStreamResponse(); 
   } else {
+    let chunks = []
+    for (const {title} of article.relatedTo) {
+      let tokS=4;
+      for(let i =0; i < title.length; i+=tokS) {
+        let strp = '', j=0;
+        for(; j < tokS && (i+j)<title.length; j++) {
+          strp += title[i+j]
+        }
+        chunks.push(strp);
+      }
+      chunks.push('\n');
+    }
     s = simulateReadableStream({
-      chunks: article.relatedTo.map((a) => a.title).join('\n').split(' '),
+      chunks,
       initialDelayInMs: 0,
       chunkDelayInMs: 0,
     });
@@ -80,8 +129,9 @@ export async function POST(request: Request) {
       while(1) {
         const {value,done} = await reader.read()
         if(done) break;
-        dataStream.write(`0:${JSON.stringify(value+ " ")}\n`);
+        dataStream.write(`0:${JSON.stringify(value)}\n`);
       }
+      dataStream.write(`0:${JSON.stringify("\n")}\n`)
       const a = await related;
       for (const as of a)
         dataStream.write(`0:${JSON.stringify(`<a>${as.id}\n`)}\n`)

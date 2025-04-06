@@ -39,10 +39,22 @@ export async function POST(request: Request) {
   } else {
     const content = article.content;
 
+    let chunks = [];
+    let tokS=2;
+    let sp = content.split(' ');
+    for(let i = 0; i < sp.length; i+=tokS) {
+      let strp = '', j=0;
+        for(; j < tokS && (i+j)<sp.length; j++) {
+          strp += sp[i+j] + ' '
+        }
+        if(j===tokS) strp = strp.slice(0, strp.length-1);
+        chunks.push(strp+' ');
+    }
+    
     const stream = simulateReadableStream({
-      chunks: content.split(' '),
+      chunks,
       initialDelayInMs: 0,
-      chunkDelayInMs: 0,
+      chunkDelayInMs: 5,
     })
 
 
@@ -54,7 +66,7 @@ export async function POST(request: Request) {
         while(1) {
           const {value,done} = await reader.read()
           if(done) break;
-          dataStream.write(`0:${JSON.stringify(value+ " ")}\n`);
+          dataStream.write(`0:${JSON.stringify(value)}\n`);
         }
 
         dataStream.write(`e:{"finishReason":"stop","usage":{"promptTokens":0,"completionTokens":0},"isContinued":false}\n`);
