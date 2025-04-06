@@ -65,7 +65,7 @@ The content should be valuable and accessible to a general audience.`,
     const stream = simulateReadableStream({
       chunks,
       initialDelayInMs: 0,
-      chunkDelayInMs: 5,
+      chunkDelayInMs: 0,
     })
 
 
