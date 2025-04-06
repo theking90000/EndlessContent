@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { GetCumulatedCost, getTokenUsage } from "./api/utils";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,15 +21,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="min-h-screen bg-gray-50">
+        <main className="min-h-screen bg-gray-50 text-black">
           <nav className="bg-white shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between h-16">
                 <div className="flex items-center">
+                  <Link prefetch={false} href="/">
                   <h1 className="text-xl font-bold text-gray-900">Endless Content</h1>
+                  </Link>
                 </div>
                 <div className="flex items-center">
-                  <Usage />
+                  <Link prefetch={false} href="/usage" className="text-blue-600 hover:text-blue-800 font-semibold transition duration-200">Usage</Link>
                 </div>
               </div>
             </div>
@@ -42,12 +45,3 @@ export default function RootLayout({
   );
 }
 
-async function Usage() {
-  const usage = await getTokenUsage(new Date());
-
-  const cost = GetCumulatedCost(usage);
-
-  return <span className="text-gray-900">
-    Tokens: {cost.input}/{cost.output} {cost.cost}$
-  </span>
-} 
