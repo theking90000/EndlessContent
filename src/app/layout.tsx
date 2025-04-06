@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: "A blog powered by AI to generate endless content",
 };
 
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
   children,
 }: Readonly<{

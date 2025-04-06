@@ -43,3 +43,5 @@ async function Articles() {
     </Link>
   ))
 } 
+
+export const revalidate = 0
