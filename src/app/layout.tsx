@@ -7,8 +7,8 @@ import Link from "next/link";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Endless Content - AI Generated Blog",
-  description: "A blog powered by AI to generate endless content",
+  title: "Infinite Blog - Powered by Chinese Workers",
+  description: "A blog powered by chinese worker to generate endless content",
 };
 
 export const dynamic = "force-dynamic";
@@ -27,7 +27,8 @@ export default function RootLayout({
               <div className="flex justify-between h-16">
                 <div className="flex items-center">
                   <Link prefetch={false} href="/">
-                  <h1 className="text-xl font-bold text-gray-900">Endless Content</h1>
+                  <h1 className="text-xl font-bold text-gray-900">Infinite Blog</h1>
+                  <span className="text-sm text-gray-600">Powered by Chinese Workers</span>
                   </Link>
                 </div>
                 <div className="flex items-center">

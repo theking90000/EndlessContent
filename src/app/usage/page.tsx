@@ -17,7 +17,14 @@ async function Usage() {
   
     return (
         <div className="space-y-4">
+            <div className="bg-yellow-100 p-4 rounded-lg">
+                <p className="text-sm text-gray-700">
+                    This blog is powered by underpaid Chinese workers. 
+                    Here is the overall expense of labor for maintaining this site.
+                </p>
+            </div>
             <div className="grid grid-cols-3 gap-4">
+                
                 <div className="bg-gray-50 p-4 rounded-lg">
                     <h3 className="text-sm font-medium text-gray-500">Input Tokens</h3>
                     <p className="text-2xl font-semibold text-gray-900">{cost.input}</p>
