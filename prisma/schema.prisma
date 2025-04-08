@@ -14,24 +14,36 @@ datasource db {
 }
 
 model Article {
-  id           String         @id @default(cuid())
-  title       String
-  content     String   @default("")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Related articles (many-to-many relationship)
   relatedTo   Article[] @relation("ArticleRelations")
   relatedFrom Article[] @relation("ArticleRelations")
+
+  translations Translation[]
 }
 
- // Start of Selection
+// Start of Selection
 model Usage {
-  id          Int      @id @default(autoincrement())
-  date        DateTime // Represents the day of usage
-  model       String   // The model used for generation
-  inputTokens Int      // Count of input tokens
-  outputTokens Int     // Count of output tokens
+  id           Int      @id @default(autoincrement())
+  date         DateTime // Represents the day of usage
+  model        String // The model used for generation
+  inputTokens  Int // Count of input tokens
+  outputTokens Int // Count of output tokens
 
   @@unique([date, model]) // Unique constraint on date and model
+}
+
+model Translation {
+  id      String
+  locale  String
+  content String
+
+  article Article @relation(fields: [id], references: [id])
+
+  @@unique([id, locale])
 }
