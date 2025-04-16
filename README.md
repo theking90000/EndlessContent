@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Endless Content - Infinite Blog
 
-## Getting Started
+This blog is powered by AI to create an infinite amount of post.
 
-First, run the development server:
+OpenAI offers free api requests if you agree to share your data with them, mainly for training of new models. I recently had the "chance" to be enrolled for this offer.
+Of course, OpenAI is doing this because they want me to send them high quality content. In other words, content that they don't already have.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Because I like the idea of free things, but I disliske the fact that my data is being used for training GPT-5,6, ..., I asked myself: how could I use this free tokens in a funny way ? A way that don't profit OpenAI (or maybe a bit, but without sending real, quality data).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This is why I created this Infinite Blog in a weekend.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# How it works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The blogs starts with 10 basic articles. Each time you open an article the model generates the body of the article. While creating body, the models also generates 3 new articles titles, in the "recommended articles" section. When you click on a recommended article, it generates the body and 3 new articles with it. Since, articles topics were boring I added the ability to create an article by inputting keywords. The models generates a new article from user prompt.
 
-## Learn More
+The quality of posts are bad, and it is the whole purpose of this site : having a large amount of shitty ai generated content.
 
-To learn more about Next.js, take a look at the following resources:
+I also added an AI translation feature, after an article has been fully generated, the user has the ability to translate it in the langage of their choice (not really limited because I use LLM to translate it).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The cost of operating is super low : i'm using gpt-4o-mini, the super cheap model and the 2.5 millions tokens are free of charge.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Stack
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The website is using the NextJS framework (v15) - with app router.
+- Vercel AI SDK is used for everything related to LLM api calls.
+- Database is provided by neon.tech free-tier
+- Website + api endpoints are hosted on vercel.
