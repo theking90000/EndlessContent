@@ -25,3 +25,8 @@ The cost of operating is super low : i'm using gpt-4o-mini, the super cheap mode
 - Vercel AI SDK is used for everything related to LLM api calls.
 - Database is provided by neon.tech free-tier
 - Website + api endpoints are hosted on vercel.
+
+Please note that code quality of the project is bad, first because it was created in one day to fullfill a shitty idea. Secondly, because this project doesn't need good code quality. I created it as a proof of concept (PoC) and I will certainly never update it later.
+
+
+Made by theking90000 | 2025
